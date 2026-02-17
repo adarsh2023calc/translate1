@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Based Content Synthesis for Regionalized Tutoring in Resource-Constrained Environments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --warning-color: #feca57;
+            --success-color: #48dbfb;
+            --dark-gray: #2c3e50;
+            --light-gray: #ecf0f1;
+            --white: #ffffff;
+            --bg-accent: #f8f9fa;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-xxl: 3rem;
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Header */
+        .smart-header {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: var(--white);
+            padding: var(--spacing-xxl) 0;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .smart-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-lg);
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        /* Cards */
+        .smart-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .smart-card.fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: var(--spacing-lg);
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .card-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #feca57, #ff6b6b);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+        }
+
+        /* Status */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+        }
+
+        .status-indicator.success {
+            background: rgba(72, 219, 251, 0.1);
+            color: var(--success-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-gray);
+            color: var(--white);
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+            margin-top: var(--spacing-xxl);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            .header-title {
+                font-size: 2rem;
+            }
+            .nav-container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="smart-header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">
+                    <i class="fas fa-brain"></i>
+                    AI Content Synthesis Platform
+                </h1>
+                <p class="header-subtitle">
+                    Transforming educational content for regionalized tutoring in resource-constrained environments
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="smart-nav">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    AI Synthesis
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('register') }}" class="nav-link"><i class="fas fa-user-plus"></i> Register</a></li>
+                    <li><a href="{{ url_for('login') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container" style="padding: var(--spacing-xxl) 0;">
+
+        <!-- Welcome Section -->
+        <div class="row">
+            <div class="col">
+                <div class="smart-card fade-in-up">
+                    <div class="card-header">
+                        <h2><i class="fas fa-rocket"></i> Welcome to AI-Powered Content Synthesis</h2>
+                        <p>Empowering educators with multilingual educational content generation</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3>Your AI Content Creation Hub</h3>
+                                <p>Transform YouTube educational videos into multilingual learning materials. Our platform uses advanced AI to extract subtitles, generate summaries, and create translated audio-visual content for diverse linguistic communities.</p>
+
+                                <div style="margin: var(--spacing-lg) 0;">
+                                    <h4>Platform Capabilities:</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <ul style="list-style: none; padding: 0;">
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-video" style="color: var(--primary-color); margin-right: var(--spacing-sm);"></i>
+                                                    YouTube Video Processing
+                                                </li>
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-language" style="color: var(--primary-color); margin-right: var(--spacing-sm);"></i>
+                                                    Multi-Language Translation
+                                                </li>
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-brain" style="color: var(--primary-color); margin-right: var(--spacing-sm);"></i>
+                                                    AI-Powered Summarization
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <ul style="list-style: none; padding: 0;">
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-volume-up" style="color: var(--secondary-color); margin-right: var(--spacing-sm);"></i>
+                                                    Text-to-Speech Synthesis
+                                                </li>
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-users" style="color: var(--secondary-color); margin-right: var(--spacing-sm);"></i>
+                                                    User Management System
+                                                </li>
+                                                <li style="margin-bottom: var(--spacing-sm);">
+                                                    <i class="fas fa-database" style="color: var(--secondary-color); margin-right: var(--spacing-sm);"></i>
+                                                    Content Library Storage
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div style="text-align: center; padding: var(--spacing-lg); background: var(--bg-accent); border-radius: var(--radius-lg);">
+                                    <i class="fas fa-play-circle" style="font-size: 4rem; color: var(--primary-color); margin-bottom: var(--spacing-md);"></i>
+                                    <h4>Ready to Start?</h4>
+                                    <p>Join our platform to begin creating multilingual educational content.</p>
+                                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-user-plus"></i>
+                                        Get Started
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Overview -->
+        <div class="row" style="margin-top: var(--spacing-xxl);">
+            <div class="col-md-4">
+                <div class="smart-card fade-in-up" style="animation-delay: 0.1s;">
+                    <div class="card-body" style="text-align: center;">
+                        <i class="fas fa-globe" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: var(--spacing-md);"></i>
+                        <h3>15+ Languages</h3>
+                        <p>Support for major Indian languages and international options</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="smart-card fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="card-body" style="text-align: center;">
+                        <i class="fas fa-robot" style="font-size: 2.5rem; color: var(--secondary-color); margin-bottom: var(--spacing-md);"></i>
+                        <h3>AI Processing</h3>
+                        <p>Advanced NLP models for accurate transcription and translation</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="smart-card fade-in-up" style="animation-delay: 0.3s;">
+                    <div class="card-body" style="text-align: center;">
+                        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: var(--spacing-md);"></i>
+                        <h3>Secure Storage</h3>
+                        <p>Safe database storage for all user-generated content</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row" style="margin-top: var(--spacing-xxl);">
+            <div class="col">
+                <div class="smart-card fade-in-up" style="animation-delay: 0.4s;">
+                    <div class="card-header">
+                        <h2><i class="fas fa-handshake"></i> Join Our Community</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4>Why Choose Our Platform?</h4>
+                                <ul style="font-size: 1.1rem; line-height: 1.8;">
+                                    <li><strong>Educational Impact:</strong> Bridge language barriers in education</li>
+                                    <li><strong>Resource Efficiency:</strong> Automated content generation saves time</li>
+                                    <li><strong>Accessibility:</strong> Make educational content available to diverse communities</li>
+                                    <li><strong>Scalability:</strong> Process unlimited videos with consistent quality</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" style="margin-bottom: var(--spacing-md);">
+                                    <i class="fas fa-rocket"></i>
+                                    Start Creating Content
+                                </a>
+                                <br>
+                                <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Access Your Account
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 AI-Based Content Synthesis Platform. Transforming education through AI-driven multilingual content creation.</p>
+        </div>
+    </footer>
+
+    <!-- Enhanced JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth animations to cards
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            // Observe all smart-cards
+            document.querySelectorAll('.smart-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
