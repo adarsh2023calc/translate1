@@ -15,11 +15,10 @@ import shutil
 import pyttsx3
 print("CWD:", os.getcwd())
 import time
-
 import os
-
-
-
+import io
+from pydub import AudioSegment
+from sarvamai import SarvamAI
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 YTDLP_PATH = r"C:\Users\adars\anaconda3\envs\tf\Scripts\yt-dlp.exe"
@@ -259,6 +258,12 @@ def index():
             # 3️⃣ Translate
             translated_text = translate_text_chunked(summary, target_lang)
 
+            chunks = []
+
+            for i in range(0,len(translated_text),2500):
+                chunks.append(translated_text[i:i+2500])
+            
+
             # 4️⃣ Text → Speech
             audio_name = f"static/audio/{uuid.uuid4()}.wav"
             language_map = {
@@ -273,37 +278,49 @@ def index():
             "pa": "pa-IN",  # Punjabi
             "ta": "ta-IN",  # Tamil
             }
-            from sarvamai import SarvamAI
-
+            
 
             client = SarvamAI(
                 api_subscription_key=os.getenv("sarvam_api"),
             )
 
             start =time.time()
-            response = client.text_to_speech.convert(
-                text=translated_text,
-                target_language_code=language_map.get(target_lang,"en-US"),
-                speaker="shubh",
-                pace=1.1,
-                speech_sample_rate=22050,
-                enable_preprocessing=True,
-                model="bulbul:v3-beta",
-                temperature=0.6
-            )
 
+
+
+
+            audio_name = f"static/audio/{uuid.uuid4()}.wav"
+            audio_segments =[]
+            for chunk in chunks:
+                response = client.text_to_speech.convert(
+                    text=chunk,
+                    target_language_code=language_map.get(target_lang,"en-US"),
+                    speaker="shubh",
+                    pace=1.1,
+                    speech_sample_rate=22050,
+                    enable_preprocessing=True,
+                    model="bulbul:v3-beta",
+                    temperature=0.1
+                )
+                
+                
+            
+                audio_base64 = response.audios[0]      # take first audio
+                audio_bytes = base64.b64decode(audio_base64)
+            
+                audio_segment = AudioSegment.from_file(
+                    io.BytesIO(audio_bytes),
+                    format="wav"  # change if API returns mp3
+                )
+
+                audio_segments.append(audio_segment)
+
+            
+            final_audio = sum(audio_segments)
+            final_audio.export(audio_name,format="wav")
             end= time.time()
             latency=end-start
             print(f"Latency: {latency:.4f} seconds")
-           
-            audio_base64 = response.audios[0]      # take first audio
-            audio_bytes = base64.b64decode(audio_base64)
-
-            audio_name = f"static/audio/{uuid.uuid4()}.wav"
-
-            with open(audio_name, "wb") as f:
-                f.write(audio_bytes)
-
             audio_file = audio_name
 
             # 5️⃣ Download video (403-safe)

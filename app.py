@@ -24,27 +24,27 @@ print("CWD:", os.getcwd())
 
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
+
+
+#=======================Config======================================#
 YTDLP_PATH = r"C:\Users\adars\anaconda3\envs\tf\Scripts\yt-dlp.exe"
 FFMPEG_PATH = r"C:\Users\adars\anaconda3\envs\tf\Library\bin\ffmpeg.exe"
-print("ffmpeg exists:", os.path.exists(FFMPEG_PATH), FFMPEG_PATH)
-print("yt-dlp exists:", os.path.exists(YTDLP_PATH), YTDLP_PATH)
-
-print("ffmpeg shutil:", shutil.which("ffmpeg"))
-print("yt-dlp shutil:", shutil.which("yt-dlp"))
-
 os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
 os.environ["FFMPEG_BINARY"] = FFMPEG_PATH
 os.environ["PATH"] = os.path.dirname(FFMPEG_PATH) + ";" + os.environ["PATH"]
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key_here'  # Change this to a random secret key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/youtube_processor?charset=utf8mb4'  # Update with your MySQL credentials
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+#=======================Config======================================#
+
+
+
+
 
 # -------------------- SUMMARIZER --------------------
 summarizer = pipeline(
@@ -156,7 +156,7 @@ def synthesize_text_google(translated_text, target_lang,audio_name):
         out.write(response.audio_content)
 
     return audio_name
-
+a
 
 # -------------------- SUMMARIZATION --------------------
 def summarize_text(text):
@@ -281,7 +281,7 @@ def index():
     transcript_text = ""
     translated_text = ""
     summary = ""
-    audio_file = ""
+   
     video_out = ""
     error = ""
 
